@@ -30,6 +30,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
             user_id INTEGER,
             task text,
             completed INTEGER DEFAULT 0,
+            deadline TEXT,
+            priority TEXT DEFAULT 'medium',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES users(id)
             )`,
@@ -37,6 +39,14 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 if (err) {
                     // Table already exists
                 }
+                // Add deadline column if it doesn't exist (migration for existing tables)
+                db.run(`ALTER TABLE todos ADD COLUMN deadline TEXT`, (alterErr) => {
+                    // Ignore error if column already exists
+                });
+                // Add priority column if it doesn't exist
+                db.run(`ALTER TABLE todos ADD COLUMN priority TEXT DEFAULT 'medium'`, (alterErr) => {
+                    // Ignore error if column already exists
+                });
             });
     }
 });

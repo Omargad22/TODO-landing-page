@@ -36,26 +36,26 @@ router.get('/', verifyToken, (req, res) => {
 
 // Create a new todo
 router.post('/', verifyToken, (req, res) => {
-    const { task } = req.body;
+    const { task, deadline, priority } = req.body;
     if (!task) {
         return res.status(400).json({ error: "Task content is required" });
     }
 
-    const sql = "INSERT INTO todos (user_id, task) VALUES (?,?)";
-    db.run(sql, [req.userId, task], function (err) {
+    const sql = "INSERT INTO todos (user_id, task, deadline, priority) VALUES (?,?,?,?)";
+    db.run(sql, [req.userId, task, deadline || null, priority || 'medium'], function (err) {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
         res.status(201).json({
             message: "Todo created",
-            data: { id: this.lastID, task, completed: 0 }
+            data: { id: this.lastID, task, completed: 0, deadline: deadline || null, priority: priority || 'medium' }
         });
     });
 });
 
-// Update a todo (Mark as completed or change text)
+// Update a todo (Mark as completed or change text/deadline/priority)
 router.put('/:id', verifyToken, (req, res) => {
-    const { task, completed } = req.body;
+    const { task, completed, deadline, priority } = req.body;
     const todoId = req.params.id;
 
     // First check if todo belongs to user
@@ -66,10 +66,12 @@ router.put('/:id', verifyToken, (req, res) => {
 
         const sql = `UPDATE todos SET 
             task = COALESCE(?, task), 
-            completed = COALESCE(?, completed) 
+            completed = COALESCE(?, completed),
+            deadline = COALESCE(?, deadline),
+            priority = COALESCE(?, priority) 
             WHERE id = ?`;
 
-        db.run(sql, [task, completed, todoId], function (err) {
+        db.run(sql, [task, completed, deadline, priority, todoId], function (err) {
             if (err) return res.status(500).json({ error: err.message });
             res.json({
                 message: "Todo updated",
