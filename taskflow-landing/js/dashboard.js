@@ -105,9 +105,9 @@ function updateChart(completed, pending, overdue) {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#0F172A',
+                        bodyColor: '#475569',
                         borderColor: 'rgba(148, 163, 184, 0.2)',
                         borderWidth: 1
                     }

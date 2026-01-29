@@ -149,6 +149,13 @@ function renderWeeklyChart() {
                         usePointStyle: true,
                         padding: 20
                     }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#0F172A',
+                    bodyColor: '#475569',
+                    borderColor: 'rgba(148, 163, 184, 0.2)',
+                    borderWidth: 1
                 }
             },
             scales: {
@@ -211,7 +218,14 @@ function renderStatusChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#0F172A',
+                    bodyColor: '#475569',
+                    borderColor: 'rgba(148, 163, 184, 0.2)',
+                    borderWidth: 1
+                }
             },
             cutout: '70%'
         }
@@ -252,7 +266,14 @@ function renderPriorityChart() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#0F172A',
+                    bodyColor: '#475569',
+                    borderColor: 'rgba(148, 163, 184, 0.2)',
+                    borderWidth: 1
+                }
             },
             cutout: '70%'
         }
