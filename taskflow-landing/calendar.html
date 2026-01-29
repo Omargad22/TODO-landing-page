@@ -150,13 +150,15 @@
     </main>
 
     <script src="js/auth.js"></script>
-    <script src="js/calendar.js"></script>
+    <script src="js/calendar.js" defer></script>
     <script>
-        if (!checkAuth()) {
-            window.location.href = '/login';
-        } else {
-            loadCalendarPage();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) {
+                window.location.href = '/login';
+            } else {
+                loadCalendarPage();
+            }
+        });
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');

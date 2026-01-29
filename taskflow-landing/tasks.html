@@ -217,13 +217,15 @@
     </main>
 
     <script src="js/auth.js"></script>
-    <script src="js/tasks.js"></script>
+    <script src="js/tasks.js" defer></script>
     <script>
-        if (!checkAuth()) {
-            window.location.href = '/login';
-        } else {
-            loadTasksPage();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) {
+                window.location.href = '/login';
+            } else {
+                loadTasksPage();
+            }
+        });
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');

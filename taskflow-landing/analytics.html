@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 </head>
 
 <body class="dashboard-body">
@@ -228,13 +228,16 @@
     </main>
 
     <script src="js/auth.js"></script>
-    <script src="js/analytics.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/analytics.js" defer></script>
     <script>
-        if (!checkAuth()) {
-            window.location.href = '/login';
-        } else {
-            loadAnalyticsPage();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) {
+                window.location.href = '/login';
+            } else {
+                loadAnalyticsPage();
+            }
+        });
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
