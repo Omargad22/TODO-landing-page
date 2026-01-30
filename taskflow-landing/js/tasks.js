@@ -92,7 +92,6 @@ function updateTaskCount() {
 
 function renderTodos(todos) {
     const list = document.getElementById('todoList');
-    list.innerHTML = '';
 
     if (todos.length === 0) {
         list.innerHTML = `
@@ -107,6 +106,7 @@ function renderTodos(todos) {
     }
 
     const now = new Date();
+    const fragment = document.createDocumentFragment();
 
     todos.forEach((todo, index) => {
         const div = document.createElement('div');
@@ -114,7 +114,7 @@ function renderTodos(todos) {
         const isOverdue = deadlineDate && deadlineDate < now && !todo.completed;
 
         div.className = `task-item-pro ${todo.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}`;
-        div.style.animationDelay = `${index * 0.03}s`;
+        div.style.animationDelay = `${index * 0.02}s`; // Faster stagger
 
         const priority = todo.priority || 'medium';
         const deadlineHtml = todo.deadline
@@ -148,8 +148,11 @@ function renderTodos(todos) {
                 </button>
             </div>
         `;
-        list.appendChild(div);
+        fragment.appendChild(div);
     });
+
+    list.innerHTML = '';
+    list.appendChild(fragment);
 }
 
 function formatDate(dateString) {

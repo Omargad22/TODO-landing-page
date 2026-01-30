@@ -304,6 +304,8 @@ img {
     filter: blur(80px);
     opacity: 0.5;
     animation: float 20s ease-in-out infinite;
+    will-change: transform;
+    contain: layout style;
 }
 
 .orb-1 {
@@ -336,19 +338,11 @@ img {
 
     0%,
     100% {
-        transform: translate(0, 0) scale(1);
-    }
-
-    25% {
-        transform: translate(50px, -50px) scale(1.1);
+        transform: translate3d(0, 0, 0);
     }
 
     50% {
-        transform: translate(-30px, 30px) scale(0.9);
-    }
-
-    75% {
-        transform: translate(-50px, -30px) scale(1.05);
+        transform: translate3d(20px, -20px, 0);
     }
 }
 
@@ -427,24 +421,24 @@ img {
 .app-mockup {
     width: 100%;
     max-width: 500px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(148, 163, 184, 0.2);
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-xl), var(--shadow-glow);
     animation: mockup-float 6s ease-in-out infinite;
+    will-change: transform;
 }
 
 @keyframes mockup-float {
 
     0%,
     100% {
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 
     50% {
-        transform: translateY(-10px);
+        transform: translate3d(0, -10px, 0);
     }
 }
 
@@ -614,11 +608,11 @@ img {
 
 .feature-card {
     padding: 32px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-lg);
-    transition: var(--transition-base);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
 }
 
 .feature-card:hover {
@@ -676,13 +670,13 @@ img {
     min-width: 280px;
     max-width: 350px;
     padding: 40px 32px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-xl);
     text-align: center;
     position: relative;
-    transition: var(--transition-base);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
 }
 
 .step:hover {
@@ -756,12 +750,12 @@ img {
 
 .pricing-card {
     padding: 40px 32px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-xl);
     position: relative;
-    transition: var(--transition-base);
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .pricing-card:hover {
@@ -870,11 +864,11 @@ img {
 
 .testimonial-card {
     padding: 32px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-xl);
-    transition: var(--transition-base);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
 }
 
 .testimonial-card:hover {
@@ -1632,13 +1626,12 @@ img {
     position: fixed;
     left: 0;
     top: 0;
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
     border-right: 1px solid rgba(148, 163, 184, 0.1);
     display: flex;
     flex-direction: column;
     z-index: 100;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, width 0.3s ease;
 }
 
 .sidebar.collapsed {
@@ -1850,17 +1843,17 @@ img {
 }
 
 .stat-card-pro {
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
     align-items: center;
     gap: 16px;
-    transition: var(--transition-base);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
+    will-change: transform;
 }
 
 .stat-card-pro::before {
@@ -1961,8 +1954,7 @@ img {
 }
 
 .panel {
-    background: var(--bg-glass);
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(148, 163, 184, 0.1);
     border-radius: var(--radius-xl);
     padding: 24px;
@@ -2367,6 +2359,24 @@ img {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Scroll-triggered animations (moved from JS) */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hero is always visible */
+.hero.animate-on-scroll {
+    opacity: 1;
+    transform: none;
 }
 
 /* Responsive */
@@ -3046,4 +3056,30 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-webkit-calendar-picker-indicator:hover,
 input[type="time"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
+}
+
+/* ================================
+   Accessibility: Reduced Motion
+   ================================ */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .gradient-orb {
+        animation: none;
+    }
+
+    .app-mockup {
+        animation: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
 }

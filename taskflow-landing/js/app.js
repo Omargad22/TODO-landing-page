@@ -91,9 +91,19 @@ function initMobileMenu() {
 }
 
 /* ================================
-   Scroll Animations
+   Scroll Animations (CSS is in stylesheet)
    ================================ */
 function initScrollAnimations() {
+    // Check if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Just make everything visible immediately
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '1';
+            section.style.transform = 'none';
+        });
+        return;
+    }
+
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -109,8 +119,11 @@ function initScrollAnimations() {
                 items.forEach((item, index) => {
                     setTimeout(() => {
                         item.classList.add('visible');
-                    }, index * 100);
+                    }, index * 80); // Slightly faster stagger
                 });
+
+                // Unobserve after animating
+                observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -120,45 +133,6 @@ function initScrollAnimations() {
         section.classList.add('animate-on-scroll');
         observer.observe(section);
     });
-
-    // Add CSS for animations
-    const style = document.createElement('style');
-    style.textContent = `
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .feature-card,
-        .step,
-        .pricing-card,
-        .testimonial-card {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        
-        .feature-card.visible,
-        .step.visible,
-        .pricing-card.visible,
-        .testimonial-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Hero is always visible */
-        .hero {
-            opacity: 1;
-            transform: none;
-        }
-    `;
-    document.head.appendChild(style);
 }
 
 /* ================================
@@ -295,25 +269,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 /* ================================
-   Parallax Effect for Hero
+   Parallax Effect for Hero (Optimized)
    ================================ */
-let parallaxTicking = false;
-
-window.addEventListener('scroll', () => {
-    if (!parallaxTicking) {
-        window.requestAnimationFrame(() => {
-            const scrollY = window.scrollY;
-            const hero = document.querySelector('.hero-bg');
-            const orbs = document.querySelectorAll('.gradient-orb');
-
-            if (hero && scrollY < 800) {
-                orbs.forEach((orb, index) => {
-                    const speed = 0.1 + (index * 0.05);
-                    orb.style.transform = `translateY(${scrollY * speed}px)`;
-                });
-            }
-            parallaxTicking = false;
-        });
-        parallaxTicking = true;
+(function () {
+    // Skip parallax if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
     }
-});
+
+    const hero = document.querySelector('.hero-bg');
+    const orbs = document.querySelectorAll('.gradient-orb');
+
+    // Early exit if no hero section (not on landing page)
+    if (!hero || orbs.length === 0) return;
+
+    let parallaxTicking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!parallaxTicking) {
+            window.requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+
+                // Early bailout if scrolled past hero
+                if (scrollY < 800) {
+                    orbs.forEach((orb, index) => {
+                        const speed = 0.05 + (index * 0.02); // Reduced speed for smoother feel
+                        orb.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+                    });
+                }
+                parallaxTicking = false;
+            });
+            parallaxTicking = true;
+        }
+    }, { passive: true });
+})();

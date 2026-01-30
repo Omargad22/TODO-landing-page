@@ -56,19 +56,23 @@ function updateStats(todos) {
 function animateCounter(elementId, target) {
     const element = document.getElementById(elementId);
     const current = parseInt(element.textContent) || 0;
-    const increment = target > current ? 1 : -1;
-    const duration = 300;
-    const steps = Math.abs(target - current);
-    if (steps === 0) return;
+    if (current === target) return;
 
-    const stepTime = duration / steps;
+    // Simple fast animation
+    const steps = 10;
+    const increment = (target - current) / steps;
     let count = current;
+    let step = 0;
 
     const timer = setInterval(() => {
+        step++;
         count += increment;
-        element.textContent = count;
-        if (count === target) clearInterval(timer);
-    }, stepTime);
+        element.textContent = Math.round(count);
+        if (step >= steps) {
+            element.textContent = target;
+            clearInterval(timer);
+        }
+    }, 30);
 }
 
 let productivityChart = null;
@@ -120,7 +124,6 @@ function updateChart(completed, pending, overdue) {
 
 function renderTodos(todos) {
     const list = document.getElementById('todoList');
-    list.innerHTML = '';
 
     if (todos.length === 0) {
         list.innerHTML = `
@@ -145,14 +148,17 @@ function renderTodos(todos) {
         return b.id - a.id;
     });
 
+    // Use DocumentFragment for batch DOM insertion
+    const fragment = document.createDocumentFragment();
+    const now = new Date();
+
     sortedTodos.forEach((todo, index) => {
         const div = document.createElement('div');
-        const now = new Date();
         const deadlineDate = todo.deadline ? new Date(todo.deadline) : null;
         const isOverdue = deadlineDate && deadlineDate < now && !todo.completed;
 
         div.className = `task-item-pro ${todo.completed ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}`;
-        div.style.animationDelay = `${index * 0.05}s`;
+        div.style.animationDelay = `${index * 0.03}s`; // Faster stagger
 
         const priority = todo.priority || 'medium';
         const deadlineHtml = todo.deadline
@@ -186,9 +192,11 @@ function renderTodos(todos) {
                 </button>
             </div>
         `;
-        list.appendChild(div);
+        fragment.appendChild(div);
     });
 
+    list.innerHTML = '';
+    list.appendChild(fragment);
     renderCalendar(todos);
 }
 
